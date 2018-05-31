@@ -1,0 +1,30 @@
+<launch>
+  <!-- Node to launch necessary files from Jetson -->
+
+  <arg name="offboard" value="false"/>
+
+  <group if="$(arg offboard)">
+    <!-- Launch usb_cam serial -->
+    <node name="panasonic_camera" pkg="usb_cam" type="usb_cam_node" output="screen" >
+      <param name="video_device" value="/dev/panasonic_camera" />
+      <param name="image_width" value="640" />
+      <param name="image_height" value="480" />
+      <param name="pixel_format" value="yuyv" />
+      <param name="camera_frame_id" value="camera_link" />
+      <param name="autofocus" value="false" />
+      <param name="io_method" value="mmap"/>
+      <param name="camera_info_url" value="file://$(find eyecu)/config/logitech_webcam_calibration.yaml"/>
+      <param name="camera_name" value="panasonic_camera"/>
+    </node>
+
+    <!-- Launch tensorflow node -->
+    <node pkg="panasonic_tensorflow" type="panasonic_tensorflow.py" name="pedestrian_detection_node" output="screen"/>
+  </group>
+
+  <group unless="$(arg offboard)">
+    <!-- Launch tensorflow node -->
+    <node pkg="panasonic_tensorflow" type="panasonic_tensorflow_standalone.py" name="pedestrian_detection_node" output="screen"/>
+  </group>
+
+
+</launch>

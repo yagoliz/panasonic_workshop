@@ -26,5 +26,4 @@
     <node pkg="panasonic_tensorflow" type="panasonic_tensorflow_standalone.py" name="pedestrian_detection_node" output="screen"/>
   </group>
 
-
 </launch>

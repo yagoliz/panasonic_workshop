@@ -88,8 +88,6 @@ while ctrl_c:
       input_data[1] = float(data[1])
       input_data[2] = float(data[2])
 
-      print(input_data)
-
     elif mode == "pedestrian":
       input_data = None
 

@@ -5,13 +5,15 @@
   <!-- <node pkg="hackbike" type="hackbike_serial" name="hackbike_serial_node" output="screen"/> -->
 
   <!-- Launch data sender node -->
-  <param name="mode" value="accelerometer"/>
+  <param name="mode" value="pedestrian"/>
   <node pkg="panasonic" type="send_data_to_bike.py" name="data_sender_node" output="screen"/>
 
   <!-- Start tensorflow node -->
-  <arg name="pedestrian" value="false"/>
+  <arg name="pedestrian" value="true"/>
   <group if="$(arg pedestrian)">
     <include file="$(find panasonic)/launch/start_tensorflow.launch"/>
   </group>
+
+  <include file="$(find panasonic)/launch/start_arduino.launch"/>
 
 </launch>

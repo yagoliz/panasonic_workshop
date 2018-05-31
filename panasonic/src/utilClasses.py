@@ -33,15 +33,16 @@ class Accelerometer():
 
   def __init__(self):
     self.pub = rospy.Publisher("/hackbike/command/target_assist_rate", UInt16, queue_size=1)
-    self.cmd = Uint16()
-    self.prev_accels = np.zeros(5,3)
+    self.cmd = UInt16()
+    self.prev_accels = np.zeros((5,3))
     self.count = 0
+    self.max_diff = np.array([3.0, 3.0, 7.0])
 
   def main(self, accel_vector):
 
     if self.count < 5:
-      self.prev_accels[count] = accel_vector
-      count += 1
+      self.prev_accels[self.count] = accel_vector
+      self.count += 1
 
     else:
       self.prev_accels[:4] = self.prev_accels[1:5]
@@ -51,8 +52,30 @@ class Accelerometer():
 
       self.pub.publish(self.cmd)
 
-  def evaluate_accels():
-    
+  def evaluate_accels(self):
+    max_acc = np.amax(self.prev_accels, axis=0)
+    min_acc = np.amin(self.prev_accels, axis=0)
+
+    diff_accels = max_acc - min_acc
+
+    # Bumpy road
+    if diff_accels[0] > self.max_diff[0] or diff_accels[1] > self.max_diff[1] or diff_accels[2] > self.max_diff[2]:
+      self.cmd.data = 100
+
+    # Non-bumpy road
+    else:
+      avg_accel = np.average(self.prev_accels, axis=0)
+
+      if avg_accel[2] < 9.0:
+        if avg_accel[1] > 2.0:
+          self.cmd.data = 500
+        elif avg_accel[1] < -2.0:
+          self.cmd.data = 100
+        else:
+          self.cmd.data = 200
+
+      else:
+        self.cmd.data = 200
 
 class PedestrianTensorFlow():
 

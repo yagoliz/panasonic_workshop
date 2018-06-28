@@ -26,6 +26,7 @@ import utilClasses
 # Import rospy and start publishers
 rospy.init_node("bike_data")
 mode = rospy.get_param("mode", "humidity")
+device = rospy.get_param("device", "/dev/termite")
 
 # Change the mode of the e-bike
 pub_mode = rospy.Publisher("/hackbike/command/set_mode", UInt8, queue_size=5)
@@ -36,7 +37,7 @@ pub_mode.publish(state)
 
 # Start data collecting through serial port
 # Open serial port
-ser = serial.Serial('/dev/termite', 115200)
+ser = serial.Serial(device, 115200)
 # Send commands to terMITe to ouput data in CSV mode
 # Stop sending data
 ser.write(b'CMD')

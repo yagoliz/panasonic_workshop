@@ -4,7 +4,7 @@ The outcome of this workshop was the **E-Basket**, a basket that can change the 
 
 This is one of the first steps into modularized, autonomous bike components, that can be plugged into any bike and improve its capabilities, while being self-operating outside the bike.
 
-[](./img/e_basket.jpg "Logo")
+![](./img/e_basket.jpg "Logo")
 
 ---
 ---
